@@ -1,16 +1,40 @@
+buildscript {
+    repositories {
+        maven { url "https://dl.bintray.com/alfa-laboratory/maven-releases/" }
+    }
+    dependencies {
+        classpath 'ru.alfalab.gradle:cucumber-parallel-test-gradle-plugin:0.3.2'
+    }
+}
+
 plugins {
     id 'java'
+    id 'jacoco'
+    id "io.freefair.lombok" version "4.1.6"
 }
+apply plugin: 'ru.alfalab.cucumber-parallel-test'
+
+generateRunner.glue = ["ru.alfabank.steps", "ru.netology.web.step"]
 
 group 'ru.netology'
 version '1.0-SNAPSHOT'
 
 sourceCompatibility = 1.8
 
+compileJava.options.encoding = "UTF-8"
+compileTestJava.options.encoding = "UTF-8"
+
 repositories {
+    jcenter()
     mavenCentral()
 }
 
 dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.12'
+    testImplementation 'ru.alfabank.tests:akita:4.1.2'
+    testImplementation 'com.codeborne:selenide:5.6.1'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.5.2'
+}
+
+test {
+    systemProperty 'selenide.headless', System.getProperty('selenide.headless')
 }
